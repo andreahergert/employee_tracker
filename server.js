@@ -4,11 +4,6 @@ const mysql = require('mysql2');
 const cTable = require('console.table');
 
 const PORT = process.env.PORT || 3001;
-// not sure this is needed
-const app = inquirer();
-
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
 
 // Connect to database, passing two parameters
 const db = mysql.createConnection(
@@ -23,8 +18,58 @@ const db = mysql.createConnection(
     console.log(`Connected to the employees_db database.`)
 );
 
+const startingQuestion = () => {
+    inquirer
+    .prompt(
+        {
+            type: 'list',
+            name: 'startinglist',
+            message: 'What would you like to do?',
+            choices:    [   'View All Employees',
+                            'Add Employee',
+                            'Update Employee Role',
+                            'View All Roles',
+                            'Add Role',
+                            'View All Departments',
+                            'Add Department',
+                            'Quit'
+                        ],
+        })
+        .then((answer) => {
+            switch (answer.startinglist) {
+                case 'View All Employees':
+                    viewEmployees();
+                    break;
+                case 'Add Employee':
+                    addEmployee();
+                    break;
+                case 'Update Employee Role':
+                    updateRole();
+                    break;
+                case 'View All Roles':
+                    viewRoles();
+                    break;
+                case 'Add Role':
+                    addRoles();
+                    break;
+                case 'View All Departments':
+                    viewDepartments();
+                    break;
+                case 'Add Department':
+                    addDepartments();
+                    break;
+                case 'Quit':
+                    db.end();
+                    console.log('Good-Bye')
+                    break;
+            }
+        })
+};
+
+startingQuestion();
+
 // Questions:
-// "What would you like to do? (use arrow keys)" [this is a list with choices]
+// "What would you like to do?" [this is a list with choices]
 
     // View All Employees
         // Shows employee table from employees_db
@@ -34,16 +79,16 @@ const db = mysql.createConnection(
             // example: Sam
         // "What is the employee's last name?"
             // example: Kash
-        // "What is the employee's role? (use arrow keys)" [this is a list with choices]
+        // "What is the employee's role?" [this is a list with choices]
             // example: Sales Lead, Salesperson, Lead Engineer, Software Engineer, Account Manager, Accountant, Legal Team Lead, Lawyer, Customer Service
-        // "Who is the employee's manager? (use arrow keys)" [this is a list with choices]
+        // "Who is the employee's manager?" [this is a list with choices]
             // example: None, John Doe, Mike Chan, Ashley Rodriguez, Kevin Tupik, Kunal Singh, Malia Brown, Sarah Lourd, Tom Allen
             // then goes back to "What would you like to do?" question
 
     // Update Employee Role
-        // "Which employee's role do you want to update (use arrow keys)" [this is a list with choices]
+        // "Which employee's role do you want to update?" [this is a list with choices]
             // example: John Doe, Mike Chan, Ashley Rodriguez, Kevin Tupik, Kunal Singh, Malia Brown, Sarah Lourd, Tom Allen [Sam Cash or new employee needs to be listed]
-        // "Which role do you want to assign the selected employee? (use arrow keys)" [this is a list with choices]
+        // "Which role do you want to assign the selected employee?" [this is a list with choices]
             // example: Sales Lead, Salesperson, Lead Engineer, Software Engineer, Account Manager, Accountant, Legal Team Lead, Lawyer, Customer Service
             // then goes back to "What would you like to do?" question
 
@@ -55,7 +100,7 @@ const db = mysql.createConnection(
             // example: Customer Service
         // "What is the salary of the role?"
             // example: 80000
-        // "Which Department does the role belong to? (use arrow keys)" [this is a list with choices]
+        // "Which Department does the role belong to?" [this is a list with choices]
             // Engineering, Finance, Legal, Sales, Service
             // then goes back to "What would you like to do?" question
 
