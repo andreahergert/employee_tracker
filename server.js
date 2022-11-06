@@ -18,14 +18,14 @@ const db = mysql.createConnection(
     console.log(`Connected to the employees_db database.`)
 );
 
-const startingQuestion = () => {
+function startingQuestion() {
     inquirer
-    .prompt(
-        {
-            type: 'list',
-            name: 'startinglist',
-            message: 'What would you like to do?',
-            choices:    [   'View All Employees',
+        .prompt([
+            {
+                type: 'list',
+                name: 'startinglist',
+                message: 'What would you like to do?',
+                choices:    [   'View All Employees',
                             'Add Employee',
                             'Update Employee Role',
                             'View All Roles',
@@ -33,47 +33,51 @@ const startingQuestion = () => {
                             'View All Departments',
                             'Add Department',
                             'Quit'
-                        ],
-        })
-        .then((answer) => {
-            switch (answer.startinglist) {
-                case 'View All Employees':
-                    viewEmployees();
-                    break;
-                case 'Add Employee':
-                    addEmployee();
-                    break;
-                case 'Update Employee Role':
-                    updateRole();
-                    break;
-                case 'View All Roles':
-                    viewRoles();
-                    break;
-                case 'Add Role':
-                    addRoles();
-                    break;
-                case 'View All Departments':
-                    viewDepartments();
-                    break;
-                case 'Add Department':
-                    addDepartments();
-                    break;
-                case 'Quit':
-                    db.end();
-                    console.log('Good-Bye')
-                    break;
-            }
+                            ],
+            },
+        ])
+        .then(function (answers) {
+            if (answers.startinglist === 'View All Employees') {
+                viewEmployees();
+            } else if (answers.startinglist === 'Add Employee') {
+                addEmployee();
+            } else if (answers.startinglist === 'Update Employee Role') {
+                updateRole();
+            } else if (answers.startinglist === 'View All Roles') {
+                viewRoles();
+            } else if (answers.startinglist === 'Add Role') {
+                addRole();
+            } else if (answers.startinglist === 'View All Departments') {
+                viewDepartments();
+            } else if (answers.startinglist === 'Add Department') {
+                addDepartment();
+            } else if (answers.startinglist === 'Quit') {
+                console.log('Good-Bye')
+            } 
         })
 };
 
-startingQuestion();
-
-// Questions:
-// "What would you like to do?" [this is a list with choices]
-
+// Viewing
+function viewEmployees() {
     // View All Employees
         // Shows employee table from employees_db
 
+};
+
+function viewRoles() {
+    // View All Roles
+        // Shows role table from employees_db
+
+};
+
+function viewDepartments() {
+    // View All Departments
+        // Shows department table from employees_db 
+
+};
+
+// Adding
+function addEmployee() {
     // Add Employee
         // "What is the employee's first name?"
             // example: Sam
@@ -85,16 +89,9 @@ startingQuestion();
             // example: None, John Doe, Mike Chan, Ashley Rodriguez, Kevin Tupik, Kunal Singh, Malia Brown, Sarah Lourd, Tom Allen
             // then goes back to "What would you like to do?" question
 
-    // Update Employee Role
-        // "Which employee's role do you want to update?" [this is a list with choices]
-            // example: John Doe, Mike Chan, Ashley Rodriguez, Kevin Tupik, Kunal Singh, Malia Brown, Sarah Lourd, Tom Allen [Sam Cash or new employee needs to be listed]
-        // "Which role do you want to assign the selected employee?" [this is a list with choices]
-            // example: Sales Lead, Salesperson, Lead Engineer, Software Engineer, Account Manager, Accountant, Legal Team Lead, Lawyer, Customer Service
-            // then goes back to "What would you like to do?" question
+};
 
-    // View All Roles
-        // Shows role table from employees_db
-
+function addRole() {
     // Add Role
         // "What is the name of the role?"
             // example: Customer Service
@@ -104,12 +101,26 @@ startingQuestion();
             // Engineering, Finance, Legal, Sales, Service
             // then goes back to "What would you like to do?" question
 
-    // View All Departments
-        // Shows department table from employees_db 
+};
 
+function addDepartment() {
     // Add Department
         // "What is the name of the department?"
             // example: Service then "Added Service to the database"
         // then goes back to "What would you like to do?" question
 
-    // Quit
+};
+
+// Updating
+function updateRole() {
+    // Update Employee Role
+        // "Which employee's role do you want to update?" [this is a list with choices]
+            // example: John Doe, Mike Chan, Ashley Rodriguez, Kevin Tupik, Kunal Singh, Malia Brown, Sarah Lourd, Tom Allen [Sam Cash or new employee needs to be listed]
+        // "Which role do you want to assign the selected employee?" [this is a list with choices]
+            // example: Sales Lead, Salesperson, Lead Engineer, Software Engineer, Account Manager, Accountant, Legal Team Lead, Lawyer, Customer Service
+            // then goes back to "What would you like to do?" question
+
+};
+
+
+startingQuestion();
