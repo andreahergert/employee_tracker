@@ -190,7 +190,7 @@ function updateRole() {
         },
     ])
     .then(function (answers) {
-        console.log("Department added!")
+        console.log("Role updated!")
         startingQuestion()
     })
 };
