@@ -102,6 +102,7 @@ function addDepartment(departmentAnswers) {
             },
         ])
         .then(function (answers) {
+            console.log("Added " + answers.department + " to the database")
             addNewDepartment(answers.department)
         })
 };
@@ -112,7 +113,7 @@ function addNewDepartment(name) {
         if (err) {
             console.log("Error message: " + err)
         }
-        console.log("Department added!")
+
         startingQuestion();
     });
 };
@@ -141,6 +142,7 @@ function addRole(roleAnswers) {
             },
         ])
         .then(function (answers) {
+            console.log("Added " + answers.role + " to the database")
             addNewRole(answers.role, answers.salary)
         })
 };
@@ -151,7 +153,6 @@ function addNewRole(title, salary) {
         if (err) {
             console.log("Error message: " + err)
         }
-        console.log("Role added!")
         startingQuestion();
     });
 };
@@ -185,6 +186,7 @@ function addEmployee(employeeAnswers) {
             },
         ])
         .then(function (answers) {
+            console.log("Added " + answers.first_name + " " + answers.last_name + " to the database")
             addNewEmployee(answers.first_name, answers.last_name)
         })
 };
@@ -195,7 +197,6 @@ function addNewEmployee(first_name, last_name) {
         if (err) {
             console.log("Error message: " + err)
         }
-        console.log("Employee added!")
         startingQuestion();
     });
 };
@@ -220,7 +221,22 @@ function updateRole() {
             },
         ])
         .then(function (answers) {
-            console.log("Role updated!")
-            startingQuestion()
+            updateEmployeeRole(answers.employee, answers.role)
         })
+};
+
+function updateEmployeeRole(employee, role) {
+
+    let name = employee.split(" ");
+    let first = name[0];
+    let last = name[1]
+
+    sql = `UPDATE employee JOIN role SET role.title = '${role}' WHERE employee.first_name = '${first}' AND employee.last_name = '${last}' AND role.id = employee.role_id LIMIT 1;`;
+    db.execute(sql, function (err, results) {
+        if (err) {
+            console.log("Error message: " + err)
+        }
+        console.log("Employee role updated!")
+        startingQuestion();
+    });
 };
