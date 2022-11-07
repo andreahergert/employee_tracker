@@ -1,9 +1,7 @@
 // Dependencies
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
-const cTable = require('console.table');
-
-const PORT = process.env.PORT || 3001;
+const consoleTable = require('console.table');
 
 // Connect to database
 const db = mysql.createConnection(
@@ -15,6 +13,15 @@ const db = mysql.createConnection(
     },
     console.log(`Connected to the employees_db database.`)
 );
+
+db.connect(function (err) {
+    // if (err) throw err;
+    // console.clear();
+    console.log("**************************************");
+    console.log("           EMPLOYEE TRACKER           ");
+    console.log("**************************************");
+    startingQuestion();
+});
 
 // Starting Question
 function startingQuestion() {
@@ -57,32 +64,29 @@ function startingQuestion() {
 };
 
 // Viewing
-function viewEmployees() {
-    // View All Employees
-    // Shows employee table from employees_db
-    // undefined
-    db.query('SELECT * FROM employee', function (err, results) {
-        console.log(results);
-        startingQuestion()
+function viewDepartments() {
+    db.query('SELECT department.id AS id, department.name AS name FROM department',
+    function (err, results) {
+        if (err) throw err;
+        console.table(results);
+        startingQuestion();
     });
 };
 
 function viewRoles() {
-    // View All Roles
-    // Shows role table from employees_db
-    // undefined
-    db.query('SELECT * FROM role', function (err, results) {
-        console.log(results);
+    db.query("SELECT role.id AS id, role.title AS title, department.name AS department, role.salary AS salary FROM role JOIN department ON role.department_id = department.id",
+    function (err, results) {
+        if (err) throw err;
+        console.table(results);
         startingQuestion()
     });
 };
 
-function viewDepartments() {
-    // View All Departments
-    // Shows department table from employees_db
-    // undefined
-    db.query('SELECT * FROM department', function (err, results) {
-        console.log(results);
+function viewEmployees() {
+    db.query("SELECT employee.id, employee.first_name, employee.last_name, role.title AS title, department.name AS department, role.salary, CONCAT(manager.first_Name, ' ',manager.last_name) AS manager FROM employee AS employee JOIN role AS role ON employee.role_id = role.id LEFT JOIN employee as manager ON employee.manager_id = manager.id JOIN department AS department ON role.department_id = department.id",
+    function (err, results) {
+        if (err) throw err;
+        console.table(results);
         startingQuestion()
     });
 };
@@ -177,6 +181,3 @@ function updateRole() {
     // then goes back to "What would you like to do?" question
 
 };
-
-
-startingQuestion();
