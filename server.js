@@ -65,32 +65,97 @@ function startingQuestion() {
 // Viewing
 function viewDepartments() {
     db.query('SELECT department.id AS id, department.name AS name FROM department',
-    function (err, results) {
-        if (err) throw err;
-        console.table(results);
-        startingQuestion();
-    });
+        function (err, results) {
+            if (err) throw err;
+            console.table(results);
+            startingQuestion();
+        });
 };
 
 function viewRoles() {
     db.query("SELECT role.id AS id, role.title AS title, department.name AS department, role.salary AS salary FROM role JOIN department ON role.department_id = department.id",
-    function (err, results) {
-        if (err) throw err;
-        console.table(results);
-        startingQuestion()
-    });
+        function (err, results) {
+            if (err) throw err;
+            console.table(results);
+            startingQuestion()
+        });
 };
 
 function viewEmployees() {
     db.query("SELECT employee.id, employee.first_name, employee.last_name, role.title AS title, department.name AS department, role.salary, CONCAT(manager.first_Name, ' ',manager.last_name) AS manager FROM employee AS employee JOIN role AS role ON employee.role_id = role.id LEFT JOIN employee as manager ON employee.manager_id = manager.id JOIN department AS department ON role.department_id = department.id",
-    function (err, results) {
-        if (err) throw err;
-        console.table(results);
-        startingQuestion()
-    });
+        function (err, results) {
+            if (err) throw err;
+            console.table(results);
+            startingQuestion()
+        });
 };
 
 // Adding
+function addDepartment(departmentAnswers) {
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                name: 'department',
+                message: "What is the name of the department?",
+                // example: Service 
+            },
+        ])
+        .then(function (answers) {
+            addNewDepartment(answers.department)
+        })
+};
+
+function addNewDepartment(name) {
+    sql = `INSERT INTO department (name) VALUES('${name}')`;
+    db.execute(sql, function (err, results) {
+        if (err) {
+            console.log("Error message: " + err)
+        }
+        console.log("Department added!")
+        startingQuestion();
+    });
+};
+
+function addRole(roleAnswers) {
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                name: 'role',
+                message: "What is the name of the role?",
+                // example: Customer Service
+            },
+            {
+                type: 'input',
+                name: 'salary',
+                message: "What is the salary of the role?",
+                // example: 80000
+            },
+            {
+                type: 'list',
+                name: 'department',
+                message: "Which Department does the role belong to?",
+                choices: ['Engineering', 'Finance', 'Legal', 'Sales'],
+                // Service or any other department needs to be added
+            },
+        ])
+        .then(function (answers) {
+            addNewRole(answers.role, answers.salary)
+        })
+};
+
+function addNewRole(title, salary) {
+    sql = `INSERT INTO role (title, salary, department_id) VALUES('${title}' , '${salary}', '5')`;
+    db.execute(sql, function (err, results) {
+        if (err) {
+            console.log("Error message: " + err)
+        }
+        console.log("Role added!")
+        startingQuestion();
+    });
+};
+
 function addEmployee(employeeAnswers) {
     inquirer
         .prompt([
@@ -120,77 +185,42 @@ function addEmployee(employeeAnswers) {
             },
         ])
         .then(function (answers) {
-            console.log("Employee added!")
-            startingQuestion()
+            addNewEmployee(answers.first_name, answers.last_name)
         })
 };
 
-function addRole(roleAnswers) {
-    inquirer
-        .prompt([
-            {
-                type: 'input',
-                name: 'role',
-                message: "What is the name of the role?",
-                // example: Customer Service
-            },
-            {
-                type: 'input',
-                name: 'salary',
-                message: "What is the salary of the role?",
-                // example: 80000
-            },
-            {
-                type: 'list',
-                name: 'department',
-                message: "Which Department does the role belong to?",
-                choices: ['Engineering', 'Finance', 'Legal', 'Sales'],
-                // Service or any other department needs to be added
-            },
-        ])
-        .then(function (answers) {
-            console.log("Role added!")
-            startingQuestion()
-        })
-};
-
-function addDepartment(departmentAnswers) {
-    inquirer
-        .prompt([
-            {
-                type: 'input',
-                name: 'department',
-                message: "What is the name of the department?",
-                // example: Service 
-            },
-        ])
-        .then(function (answers) {
-            console.log("Department added!")
-            startingQuestion()
-        })
+function addNewEmployee(first_name, last_name) {
+    sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES('${first_name}' , '${last_name}', '9', '1')`;
+    db.execute(sql, function (err, results) {
+        if (err) {
+            console.log("Error message: " + err)
+        }
+        console.log("Employee added!")
+        startingQuestion();
+    });
 };
 
 // Updating
 function updateRole() {
     inquirer
-    .prompt([
-        {
-            type: 'list',
-            name: 'employee',
-            message: "Which employee's role do you want to update?",
-            choices: ['None', 'John Doe', 'Mike Chan', 'Ashley Rodriguez', 'Kevin Tupik', 'Kunal Singh', 'Malia Brown', 'Sarah Lourd', 'Tom Allen'],
-            // Added employees need to show up on this list ex. Sam Cash
-        },
-        {
-            type: 'list',
-            name: 'role',
-            message: "Which role do you want to assign the selected employee?",
-            choices: ['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer', 'Account Manager', 'Accountant', 'Legal Team Lead', 'Lawyer'],
-            // Customer Service or any other role needs to be added
-        },
-    ])
-    .then(function (answers) {
-        console.log("Role updated!")
-        startingQuestion()
-    })
+        .prompt([
+            {
+                type: 'list',
+                name: 'employee',
+                message: "Which employee's role do you want to update?",
+                choices: ['None', 'John Doe', 'Mike Chan', 'Ashley Rodriguez', 'Kevin Tupik', 'Kunal Singh', 'Malia Brown', 'Sarah Lourd', 'Tom Allen'],
+                // Added employees need to show up on this list ex. Sam Cash
+            },
+            {
+                type: 'list',
+                name: 'role',
+                message: "Which role do you want to assign the selected employee?",
+                choices: ['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer', 'Account Manager', 'Accountant', 'Legal Team Lead', 'Lawyer'],
+                // Customer Service or any other role needs to be added
+            },
+        ])
+        .then(function (answers) {
+            console.log("Role updated!")
+            startingQuestion()
+        })
 };
