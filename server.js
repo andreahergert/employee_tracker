@@ -15,8 +15,7 @@ const db = mysql.createConnection(
 );
 
 db.connect(function (err) {
-    // if (err) throw err;
-    // console.clear();
+    if (err) throw err;
     console.log("**************************************");
     console.log("           EMPLOYEE TRACKER           ");
     console.log("**************************************");
@@ -166,18 +165,32 @@ function addDepartment(departmentAnswers) {
             },
         ])
         .then(function (answers) {
-            console.log("Added " + answers.department + " to the database!")
+            console.log("Department added!")
             startingQuestion()
         })
 };
 
 // Updating
 function updateRole() {
-    // Update Employee Role
-    // "Which employee's role do you want to update?" [this is a list with choices]
-    // example: John Doe, Mike Chan, Ashley Rodriguez, Kevin Tupik, Kunal Singh, Malia Brown, Sarah Lourd, Tom Allen [Sam Cash or new employee needs to be listed]
-    // "Which role do you want to assign the selected employee?" [this is a list with choices]
-    // example: Sales Lead, Salesperson, Lead Engineer, Software Engineer, Account Manager, Accountant, Legal Team Lead, Lawyer, Customer Service
-    // then goes back to "What would you like to do?" question
-
+    inquirer
+    .prompt([
+        {
+            type: 'list',
+            name: 'employee',
+            message: "Which employee's role do you want to update?",
+            choices: ['None', 'John Doe', 'Mike Chan', 'Ashley Rodriguez', 'Kevin Tupik', 'Kunal Singh', 'Malia Brown', 'Sarah Lourd', 'Tom Allen'],
+            // Added employees need to show up on this list ex. Sam Cash
+        },
+        {
+            type: 'list',
+            name: 'role',
+            message: "Which role do you want to assign the selected employee?",
+            choices: ['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer', 'Account Manager', 'Accountant', 'Legal Team Lead', 'Lawyer'],
+            // Customer Service or any other role needs to be added
+        },
+    ])
+    .then(function (answers) {
+        console.log("Department added!")
+        startingQuestion()
+    })
 };
