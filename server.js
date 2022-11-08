@@ -28,7 +28,7 @@ function startingQuestion() {
         .prompt([
             {
                 type: 'list',
-                name: 'startinglist',
+                name: 'choices',
                 message: 'What would you like to do?',
                 choices: ['View All Employees',
                     'Add Employee',
@@ -42,25 +42,27 @@ function startingQuestion() {
             },
         ])
         .then(function (answers) {
-            if (answers.startinglist === 'View All Employees') {
+            if (answers.choices === 'View All Employees') {
                 viewEmployees();
-            } else if (answers.startinglist === 'Add Employee') {
+            } else if (answers.choices === 'Add Employee') {
                 addEmployee();
-            } else if (answers.startinglist === 'Update Employee Role') {
+            } else if (answers.choices === 'Update Employee Role') {
                 updateRole();
-            } else if (answers.startinglist === 'View All Roles') {
+            } else if (answers.choices === 'View All Roles') {
                 viewRoles();
-            } else if (answers.startinglist === 'Add Role') {
+            } else if (answers.choices === 'Add Role') {
                 addRole();
-            } else if (answers.startinglist === 'View All Departments') {
+            } else if (answers.choices === 'View All Departments') {
                 viewDepartments();
-            } else if (answers.startinglist === 'Add Department') {
+            } else if (answers.choices === 'Add Department') {
                 addDepartment();
-            } else if (answers.startinglist === 'Quit') {
+            } else if (answers.choices === 'Quit') {
                 console.log('Good-Bye')
+                db.end();
             }
         })
 };
+
 
 // Viewing
 function viewDepartments() {
@@ -98,7 +100,6 @@ function addDepartment(departmentAnswers) {
                 type: 'input',
                 name: 'department',
                 message: "What is the name of the department?",
-                // example: Service 
             },
         ])
         .then(function (answers) {
@@ -108,12 +109,11 @@ function addDepartment(departmentAnswers) {
 };
 
 function addNewDepartment(name) {
-    sql = `INSERT INTO department (name) VALUES('${name}')`;
-    db.execute(sql, function (err, results) {
+    var sql = `INSERT INTO department (name) VALUES ('${name}')`;
+    db.query(sql, function (err, results) {
         if (err) {
             console.log("Error message: " + err)
         }
-
         startingQuestion();
     });
 };
@@ -125,20 +125,17 @@ function addRole(roleAnswers) {
                 type: 'input',
                 name: 'role',
                 message: "What is the name of the role?",
-                // example: Customer Service
             },
             {
                 type: 'input',
                 name: 'salary',
                 message: "What is the salary of the role?",
-                // example: 80000
             },
             {
                 type: 'list',
                 name: 'department',
                 message: "Which Department does the role belong to?",
                 choices: ['Engineering', 'Finance', 'Legal', 'Sales'],
-                // Service or any other department needs to be added
             },
         ])
         .then(function (answers) {
@@ -147,9 +144,9 @@ function addRole(roleAnswers) {
         })
 };
 
-function addNewRole(title, salary) {
-    sql = `INSERT INTO role (title, salary, department_id) VALUES('${title}' , '${salary}', '5')`;
-    db.execute(sql, function (err, results) {
+function addNewRole(title, salary,) {
+    var sql = `INSERT INTO role (title, salary, department_id) VALUES ('${title}' , '${salary}', '5')`;
+    db.query(sql, function (err, results) {
         if (err) {
             console.log("Error message: " + err)
         }
@@ -175,14 +172,12 @@ function addEmployee(employeeAnswers) {
                 name: 'role',
                 message: "What is the employee's role?",
                 choices: ['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer', 'Account Manager', 'Accountant', 'Legal Team Lead', 'Lawyer'],
-                // Customer Service or any other role needs to be added
             },
             {
                 type: 'list',
                 name: 'manager',
                 message: "Who is the employee's manager?",
                 choices: ['None', 'John Doe', 'Mike Chan', 'Ashley Rodriguez', 'Kevin Tupik', 'Kunal Singh', 'Malia Brown', 'Sarah Lourd', 'Tom Allen'],
-                // Added employees need to show up on this list
             },
         ])
         .then(function (answers) {
@@ -192,8 +187,8 @@ function addEmployee(employeeAnswers) {
 };
 
 function addNewEmployee(first_name, last_name) {
-    sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES('${first_name}' , '${last_name}', '9', '1')`;
-    db.execute(sql, function (err, results) {
+    var sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${first_name}' , '${last_name}', '9', '1')`;
+    db.query(sql, function (err, results) {
         if (err) {
             console.log("Error message: " + err)
         }
@@ -210,14 +205,12 @@ function updateRole() {
                 name: 'employee',
                 message: "Which employee's role do you want to update?",
                 choices: ['None', 'John Doe', 'Mike Chan', 'Ashley Rodriguez', 'Kevin Tupik', 'Kunal Singh', 'Malia Brown', 'Sarah Lourd', 'Tom Allen'],
-                // Added employees need to show up on this list ex. Sam Cash
             },
             {
                 type: 'list',
                 name: 'role',
                 message: "Which role do you want to assign the selected employee?",
                 choices: ['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer', 'Account Manager', 'Accountant', 'Legal Team Lead', 'Lawyer'],
-                // Customer Service or any other role needs to be added
             },
         ])
         .then(function (answers) {
@@ -232,7 +225,7 @@ function updateEmployeeRole(employee, role) {
     let last = name[1]
 
     sql = `UPDATE employee JOIN role SET role.title = '${role}' WHERE employee.first_name = '${first}' AND employee.last_name = '${last}' AND role.id = employee.role_id LIMIT 1;`;
-    db.execute(sql, function (err, results) {
+    db.query(sql, function (err, results) {
         if (err) {
             console.log("Error message: " + err)
         }
