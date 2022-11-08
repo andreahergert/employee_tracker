@@ -140,7 +140,7 @@ function addRole(roleAnswers) {
         ])
         .then(function (answers) {
             console.log("Added " + answers.role + " to the database")
-            addNewRole(answers.role, answers.salary)
+            addNewRole(answers.role, answers.salary,)
         })
 };
 
