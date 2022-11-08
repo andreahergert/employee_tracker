@@ -204,7 +204,7 @@ function updateRole() {
                 type: 'list',
                 name: 'employee',
                 message: "Which employee's role do you want to update?",
-                choices: ['None', 'John Doe', 'Mike Chan', 'Ashley Rodriguez', 'Kevin Tupik', 'Kunal Singh', 'Malia Brown', 'Sarah Lourd', 'Tom Allen'],
+                choices: ['John Doe', 'Mike Chan', 'Ashley Rodriguez', 'Kevin Tupik', 'Kunal Singh', 'Malia Brown', 'Sarah Lourd', 'Tom Allen'],
             },
             {
                 type: 'list',
