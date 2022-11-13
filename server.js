@@ -66,7 +66,7 @@ function startingQuestion() {
 
 // Viewing
 function viewDepartments() {
-    db.query('SELECT department.id AS id, department.name AS name FROM department',
+    db.query('SELECT * FROM department',
         function (err, results) {
             if (err) throw err;
             console.table(results);
@@ -75,7 +75,7 @@ function viewDepartments() {
 };
 
 function viewRoles() {
-    db.query("SELECT role.id AS id, role.title AS title, department.name AS department, role.salary AS salary FROM role JOIN department ON role.department_id = department.id",
+    db.query("SELECT * FROM role",
         function (err, results) {
             if (err) throw err;
             console.table(results);
@@ -84,7 +84,7 @@ function viewRoles() {
 };
 
 function viewEmployees() {
-    db.query("SELECT employee.id, employee.first_name, employee.last_name, role.title AS title, department.name AS department, role.salary, CONCAT(manager.first_Name, ' ',manager.last_name) AS manager FROM employee AS employee JOIN role AS role ON employee.role_id = role.id LEFT JOIN employee as manager ON employee.manager_id = manager.id JOIN department AS department ON role.department_id = department.id",
+    db.query("SELECT * FROM employee",
         function (err, results) {
             if (err) throw err;
             console.table(results);
