@@ -3,7 +3,8 @@
 ## Licensing:
 [![license](https://img.shields.io/badge/license-MIT-blue)](https://shields.io)
 
-## Table of Contents 
+## Table of Contents
+- [User Story](#user-story)
 - [Description](#description)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -11,6 +12,13 @@
 - [Contributing](#contributing)
 - [Tests](#tests)
 - [Questions](#questions)
+
+## User Story:
+AS A business owner
+
+I WANT to be able to view and manage the departments, roles, and employees in my company
+
+SO THAT I can organize and plan my business
 
 ## Description:
 This is an employee tracker database created in the UW Coding Bootcamp. It allows users to input departments, roles, and employees, update an employee's role, and view a table of departments, roles, and employees.
